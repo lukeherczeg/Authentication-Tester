@@ -17,7 +17,7 @@ int main() {
 	bool login = false;
 
 	cout << "Welcome to the Authentication Test. Sign up below! \nIf you have an account already, please enter your username and password.\n" << endl;
-	cout << "1. Log in\n2. Sign up" << endl;
+	cout << "1. Log in\n2. Sign up\n3. Print users" << endl;
 
 	while(!finished) {
 		cin >> choice;
@@ -47,12 +47,20 @@ int main() {
 				cout << "Password : ";
 				cin >> passWord;
 				auth = userName + passWord;
-				writeData.open ("authData.txt");
-				writeData << auth;
-				writeData.close();
+				writeData.open ("authData.txt", ios_base::app);
+				writeData << auth << endl;
 				cout << "Good stuff! You can now log in." << endl;
+				writeData.close();
 				break;
 			case 3:
+				cout << "Users:\n" << endl;
+				readData.open("authData.txt");
+				while(getline(readData, individualUser)){
+					cout << individualUser << endl;
+				}
+				readData.close();
+				break;
+			case 4:
 				finished = true;
 				break;
 			default:
