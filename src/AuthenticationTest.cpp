@@ -53,12 +53,14 @@ void printUsers(){
 	string tempUser;
 	int count = 0;
 
-	cout << "Users:\n" << endl;
+	cout << "Users:" << endl;
 	readData.open("authData.txt");
 	while(getline(readData, tempUser)){
 		count++;
 		cout << count << ".) " << tempUser << endl;
 	}
+	if(count == 0)
+		cout << "No users found.";
 	readData.close();
 }
 
@@ -72,10 +74,11 @@ int main() {
 	string userName = "";
 	string passWord = "";
 	int choice = 0;
+	string choice2 = "";
 	bool finished = false;
 
 	cout << "Welcome to the Authentication Test. Sign up below! \nIf you have an account already, please enter your username and password.\n" << endl;
-	cout << "1. Log in\n2. Sign up\n3. Print users" << endl;
+	cout << "1. Log in\n2. Sign up\n3. Print users\n4. Exit\n5. Clear all users" << endl;
 
 	while(!finished) {
 		cin >> choice;
@@ -96,6 +99,15 @@ int main() {
 				printUsers();
 				break;
 			case 4:
+				cout << "Are you sure you want to clear all users? y/n : ";
+				cin >> choice2;
+				if(choice2 == "y")
+					remove("authData.txt");
+				else
+					break;
+				cin.clear();
+				break;
+			case 5:
 				finished = true;
 				break;
 			default:
