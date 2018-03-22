@@ -11,9 +11,11 @@ void signUp(string userName, string passWord){
 	string tempUser;
 
 	readData.open("authData.txt");
-	while(getline(readData, tempUser) && !exists){
-		if(tempUser == auth)
-			exists= true;
+	while(getline(readData, tempUser)){
+		if(tempUser == auth){
+			exists = true;
+			break;
+		}
 	}
 
 	if(!exists){
@@ -30,14 +32,17 @@ void signUp(string userName, string passWord){
 
 void logIn(string userName, string passWord, bool & finished){
 	string tempUser;
-	bool login = false;
-	ifstream readData;
 	string auth = "Username: " + userName + "    Password: " + passWord;
 
+	bool login = false;
+	ifstream readData;
+
 	readData.open("authData.txt");
-	while(getline(readData, tempUser) && !login){
-		if(tempUser == auth)
+	while(getline(readData, tempUser)){
+		if(tempUser == auth){
 			login = true;
+			break;
+		}
 	}
 	if(login){
 		cout << "You're in! :)" << endl;
@@ -65,23 +70,34 @@ void printUsers(){
 }
 
 
-
-
-
-
-
 int main() {
 	string userName = "";
 	string passWord = "";
 	int choice = 0;
+	int count = 0;
 	string choice2 = "";
 	bool finished = false;
 
-	cout << "Welcome to the Authentication Test. Sign up below! \nIf you have an account already, please enter your username and password.\n" << endl;
-	cout << "1. Log in\n2. Sign up\n3. Print users\n4. Exit\n5. Clear all users" << endl;
+	cout << "\nWelcome to the Authentication Test. Sign up below! \nIf you have an account already, please enter your username and password.\n" << endl;
+	cout << "\t1. Log in\n\t2. Sign up\n\t3. Print users\n\t4. Clear all users\n\t5. Exit" << endl;
 
 	while(!finished) {
 		cin >> choice;
+		while (true){
+			cin >> choice;
+
+			if(cin.fail()){
+				cin.clear(); //This corrects the stream.
+				cin.ignore(); //This skips the left over stream data.
+				if(count == 0)
+					cout << "Please enter an Integer only." << endl;
+				count++;
+			}
+			else{
+				break;
+			}
+		}
+
 		switch(choice){
 			case 1:
 				cout << "Username : "; cin >> userName;
@@ -114,6 +130,9 @@ int main() {
 				cout << "WRONG." << endl;
 				break;
 		}
+		count = 0;
 	}
+
+
 	return 0;
 }
