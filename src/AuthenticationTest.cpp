@@ -4,15 +4,49 @@
 #include <istream>
 using namespace std;
 
+int characterCountUntilSpace(std::string in)
+{
+    int count = 0;
+    for(unsigned int i = 0; i < in.size(); ++i) {
+        if (isspace(in[i]))
+            break;
+    	count++;
+    }
+    return count;
+}
+
 void signUp(string userName, string passWord){
-	bool exists = false;
-	string auth = "Username: " + userName + "    Password: " + passWord;
 	ifstream readData;
+	bool exists = false;
+	int passWordStart = 0;
+	int userNameStart = 10;
+	int tempPassWordLength = 0;
+	int tempUserNameLength = 0;
 	string tempUser;
+	string tempUserName;
+	string tempPassWord;
+	string auth = "Username: " + userName + "    Password: " + passWord;
+	//			  Length 10	^			       Length 14 ^
 
 	readData.open("authData.txt");
 	while(getline(readData, tempUser)){
-		if(tempUser == auth){
+		tempUserNameLength = characterCountUntilSpace(tempUser.substr(userNameStart));
+		passWordStart = 24 + tempUserNameLength;
+		tempPassWordLength = characterCountUntilSpace(tempUser.substr(passWordStart));
+
+		tempUserName = tempUser.substr(userNameStart, tempUserNameLength);
+		tempPassWord = tempUser.substr(passWordStart, tempPassWordLength);
+
+		cout << tempUserName << endl;
+		cout << tempPassWord << endl;
+
+		if(tempUserName == userName){
+			cout << "Username already in use! Try something else." << endl;
+			exists = true;
+			break;
+		}
+		if(tempPassWord == passWord){
+			cout << "Password already in use! Try something else." << endl;
 			exists = true;
 			break;
 		}
@@ -24,9 +58,6 @@ void signUp(string userName, string passWord){
 		writeData << auth << endl;
 		cout << "Good stuff! You can now log in." << endl;
 		writeData.close();
-	}
-	else{
-		cout << "That account exists silly! Go log in!" << endl;
 	}
 }
 
@@ -82,10 +113,9 @@ int main() {
 	cout << "\t1. Log in\n\t2. Sign up\n\t3. Print users\n\t4. Clear all users\n\t5. Exit" << endl;
 
 	while(!finished) {
-		cin >> choice;
 		while (true){
 			cin >> choice;
-
+			//choice = 2;
 			if(cin.fail()){
 				cin.clear(); //This corrects the stream.
 				cin.ignore(); //This skips the left over stream data.
