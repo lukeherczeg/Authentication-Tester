@@ -4,11 +4,11 @@
 #include <istream>
 using namespace std;
 
-int characterCountUntilSpace(std::string in)
+int characterCountUntilSpace(std::string word)
 {
     int count = 0;
-    for(unsigned int i = 0; i < in.size(); ++i) {
-        if (isspace(in[i]))
+    for(unsigned int i = 0; i < word.size(); i++) {
+        if (isspace(word[i]))
             break;
     	count++;
     }
@@ -18,45 +18,33 @@ int characterCountUntilSpace(std::string in)
 void signUp(string userName, string passWord){
 	ifstream readData;
 	bool exists = false;
-	int passWordStart = 0;
+	string tempUser, tempUserName, tempPassWord;
+	int passWordStart, tempPassWordLength, tempUserNameLength;
 	int userNameStart = 10;
-	int tempPassWordLength = 0;
-	int tempUserNameLength = 0;
-	string tempUser;
-	string tempUserName;
-	string tempPassWord;
-	string auth = "Username: " + userName + "    Password: " + passWord;
-	//			  Length 10	^			       Length 14 ^
 
 	readData.open("authData.txt");
 	while(getline(readData, tempUser)){
 		tempUserNameLength = characterCountUntilSpace(tempUser.substr(userNameStart));
-		passWordStart = 24 + tempUserNameLength;
+		passWordStart = 24 + tempUserNameLength;  //24 is the length of the formatting string up to that point.
 		tempPassWordLength = characterCountUntilSpace(tempUser.substr(passWordStart));
 
 		tempUserName = tempUser.substr(userNameStart, tempUserNameLength);
 		tempPassWord = tempUser.substr(passWordStart, tempPassWordLength);
 
-		cout << tempUserName << endl;
-		cout << tempPassWord << endl;
-
-		if(tempUserName == userName){
-			cout << "Username already in use! Try something else." << endl;
-			exists = true;
-			break;
-		}
-		if(tempPassWord == passWord){
-			cout << "Password already in use! Try something else." << endl;
+		if(tempUserName == userName || tempPassWord == passWord){
+			cout << "Username or password already in use! Try something else." << endl;
 			exists = true;
 			break;
 		}
 	}
 
 	if(!exists){
+		string auth = "Username: " + userName + "    Password: " + passWord;
+		//			  Length 10	^			       Length 14 ^
 		ofstream writeData;
 		writeData.open ("authData.txt", ios_base::app);
 		writeData << auth << endl;
-		cout << "Good stuff! You can now log in." << endl;
+		cout << "Account created! You can now log in." << endl;
 		writeData.close();
 	}
 }
@@ -96,10 +84,9 @@ void printUsers(){
 		cout << count << ".) " << tempUser << endl;
 	}
 	if(count == 0)
-		cout << "No users found.";
+		cout << "No users found." << endl;
 	readData.close();
 }
-
 
 int main() {
 	string userName = "";
@@ -115,7 +102,6 @@ int main() {
 	while(!finished) {
 		while (true){
 			cin >> choice;
-			//choice = 2;
 			if(cin.fail()){
 				cin.clear(); //This corrects the stream.
 				cin.ignore(); //This skips the left over stream data.
@@ -162,7 +148,5 @@ int main() {
 		}
 		count = 0;
 	}
-
-
 	return 0;
 }
